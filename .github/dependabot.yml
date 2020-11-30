@@ -1,0 +1,10 @@
+version: 2
+updates:
+- package-ecosystem: "pip"
+  directory: "/ps2bq"
+  schedule:
+    interval: "daily"
+- package-ecosystem: "pip"
+  directory: "/ruuvi2iotcore_reset"
+  schedule:
+    interval: "daily"
