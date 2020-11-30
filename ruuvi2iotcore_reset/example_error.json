@@ -1,0 +1,51 @@
+{
+  "incident": {
+    "incident_id": "0.lus2ccflspde",
+    "resource_id": "",
+    "resource_name": "bcow-me gcf-ps2bq-europe-west1-ruuvi2iotcore",
+    "resource": {
+      "type": "pubsub_subscription",
+      "labels": {
+        "project_id": "bcow-me",
+        "subscription_id": "gcf-ps2bq-europe-west1-ruuvi2iotcore"
+      }
+    },
+    "resource_display_name": "gcf-ps2bq-europe-west1-ruuvi2iotcore",
+    "resource_type_display_name": "Cloud Pub/Sub Subscription",
+    "metric": {
+      "type": "pubsub.googleapis.com/subscription/ack_message_count",
+      "displayName": "Ack message count"
+    },
+    "started_at": 1606747460,
+    "policy_name": "No beacons from home Ruuvi tag(s)",
+    "condition_name": "Ack message count [RATE]",
+    "condition": {
+      "name": "projects/bcow-me/alertPolicies/1965781040970520389/conditions/10511569168304867455",
+      "displayName": "Ack message count [RATE]",
+      "conditionThreshold": {
+        "filter": "metric.type=\"pubsub.googleapis.com/subscription/ack_message_count\" resource.type=\"pubsub_subscription\" resource.label.\"subscription_id\"=\"gcf-ps2bq-europe-west1-ruuvi2iotcore\"",
+        "aggregations": [
+          {
+            "alignmentPeriod": "120s",
+            "perSeriesAligner": "ALIGN_RATE"
+          }
+        ],
+        "comparison": "COMPARISON_LT",
+        "thresholdValue": 0.25,
+        "duration": "120s",
+        "trigger": {
+          "count": 1
+        }
+      }
+    },
+    "url": "https://console.cloud.google.com/monitoring/alerting/incidents/0.lus2ccflspde?project=bcow-me",
+    "documentation": {
+      "content": "1. Check that ruuvi2iotcore is running on \"vattukakkonen\" Raspberry Pi\n2. Check that Ruuvi tags have enough power and replace battery if not",
+      "mime_type": "text/markdown"
+    },
+    "state": "open",
+    "ended_at": null,
+    "summary": "Ack message count for bcow-me gcf-ps2bq-europe-west1-ruuvi2iotcore with metric labels {delivery_type=push} is below the threshold of 0.25 with a value of 0.017."
+  },
+  "version": "1.2"
+}
