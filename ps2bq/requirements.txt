@@ -1,1 +1,1 @@
-google-cloud-bigquery==2.4.0
+google-cloud-bigquery==2.5.0
