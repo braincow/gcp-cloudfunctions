@@ -8,3 +8,7 @@ updates:
   directory: "/ruuvi2iotcore_reset"
   schedule:
     interval: "daily"
+- package-ecosystem: "pip"
+  directory: "/ruuvitag_google_assistant"
+  schedule:
+    interval: "daily"
