@@ -3,7 +3,6 @@ def ps2bq(event, context):
     import base64
     import os
     import json
-    import sys
 
     # check if debug is enabled or not
     debug_enabled = False
@@ -24,15 +23,12 @@ def ps2bq(event, context):
         if not isinstance(payload, list):
             payload = [payload]
     else:
-        print("No data present in the message.", file=sys.stderr)
-        return
+        raise ValueError("No 'data' field in event")
 
     # stream the data into bq dataset.table
     table_id = os.environ.get("TABLE_ID")
     if not table_id or table_id == "":
-        print("TABLE_ID environment variable cannot be empty",
-            file=sys.stderr)
-        return
+        raise ValueError("TABLE_ID environment variable cannot be empty")
 
     bq = bigquery.Client()
     errors = bq.insert_rows_json(
@@ -41,8 +37,6 @@ def ps2bq(event, context):
         if debug_enabled:
             print("Data inserted succesfully.")
     else:
-        print("Errors while inserting: {}".format(errors),
-            file=sys.stderr)
-        return
+        raise RuntimeError("Errors while inserting data: {}".format(errors))
 
 # eof

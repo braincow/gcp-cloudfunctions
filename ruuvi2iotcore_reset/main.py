@@ -1,6 +1,5 @@
 def ruuvi2iotcore_reset(event, context):
     from google.cloud import iot_v1
-    import sys
     import os
     import json
     import base64
@@ -22,12 +21,16 @@ def ruuvi2iotcore_reset(event, context):
             print(payload)
         payload = json.loads(payload)
         if not isinstance(payload, dict):
-            print("Payload is not a dictionary!", file=sys.stderr)
-            return
+            raise ValueError("Payload is not a dictionary!")
     else:
-        print("No data present in the message.", file=sys.stderr)
-        return
-    
+        raise ValueError("No 'data' field in event")
+
+    if "incident" not in payload:
+        raise ValueError("Message is not an incident report.")
+
+    if "state" not in payload["incident"]:
+        raise ValueError("Incident report is malformed.")
+
     if payload["incident"]["state"] == "open":
         # https://googleapis.dev/python/cloudiot/latest/index.html
         # connect to IoT core using cloudfunction's runtime service account
@@ -54,6 +57,7 @@ def ruuvi2iotcore_reset(event, context):
             os.environ.get("GATEWAY")
             ))
     else:
-        print("Unknown incident state received.", file=sys.stderr)
+        raise ValueError("Unknown incident state received: {}".format(
+            payload["incident"]["state"]))
 
 # eof
