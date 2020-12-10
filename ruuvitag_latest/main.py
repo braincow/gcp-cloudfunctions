@@ -20,18 +20,21 @@ def ruuvitag_latest(request):
 
     latest_query = """
 SELECT
+  tags.name,
   agg.table.*
 FROM (
   SELECT
-    address,
+    table.address as address,
     ARRAY_AGG(STRUCT(table)
     ORDER BY
       timestamp DESC)[SAFE_OFFSET(0)] agg
   FROM
     `ruuvitag.data` table
-  WHERE timestamp > TIMESTAMP_ADD(CURRENT_TIMESTAMP(), INTERVAL -1 MINUTE)
+  WHERE timestamp >= TIMESTAMP_ADD(CURRENT_TIMESTAMP(), INTERVAL -1 MINUTE)
   GROUP BY
-    address);
+    address)
+  RIGHT JOIN ruuvitag.known_tags tags
+  ON tags.address = agg.table.address;
     """
 
     query_job = bq.query(latest_query)
