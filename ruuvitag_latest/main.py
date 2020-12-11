@@ -1,6 +1,6 @@
 def ruuvitag_latest(request):
     from google.cloud import bigquery
-    from flask import escape, jsonify
+    from flask import jsonify
     import os
 
     # check if debug is enabled or not
