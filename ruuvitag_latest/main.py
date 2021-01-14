@@ -29,13 +29,13 @@ FROM (
     ORDER BY
       timestamp DESC)[SAFE_OFFSET(0)] agg
   FROM
-    `ruuvitag.data` table
+    `{}` table
   WHERE timestamp >= TIMESTAMP_ADD(CURRENT_TIMESTAMP(), INTERVAL -1 MINUTE)
   GROUP BY
     address)
   RIGHT JOIN ruuvitag.known_tags tags
   ON tags.address = agg.table.address;
-    """
+    """.format(table_id)
 
     query_job = bq.query(latest_query)
     records = [dict(row) for row in query_job]
