@@ -50,6 +50,9 @@ def ruuvitag_trend(request):
 
     records = [row["data"][field] for row in query_job]
     coeffs = numpy.polyfit([*range(1, len(records) + 1)], records, 1)
+    # if the slope is a +ve value --> increasing trend
+    # if the slope is a -ve value --> decreasing trend
+    # if the slope is a zero value --> No trend
     slope = coeffs[-2]
 
     retval = {"values": records, "slope": slope, "field": field, "tag": tag}
