@@ -1,6 +1,10 @@
 version: 2
 updates:
 - package-ecosystem: "pip"
+  directory: "/http_helloworld"
+  schedule:
+    interval: "daily"
+- package-ecosystem: "pip"
   directory: "/ps2bq"
   schedule:
     interval: "daily"
@@ -9,6 +13,10 @@ updates:
   schedule:
     interval: "daily"
 - package-ecosystem: "pip"
-  directory: "/ruuvitag_google_assistant"
+  directory: "/ruuvitag_latest"
+  schedule:
+    interval: "daily"
+- package-ecosystem: "pip"
+  directory: "/ruuvitag_trend"
   schedule:
     interval: "daily"
