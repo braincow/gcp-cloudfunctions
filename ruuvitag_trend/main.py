@@ -1,18 +1,20 @@
 def ruuvitag_trend(request):
     from google.cloud import bigquery
-    from flask import jsonify, abort
+    from flask import jsonify, abort, make_response
     import os
     import numpy
 
     if "field" not in request.args or "tag" not in request.args \
             or "interval" not in request.args:
-        return abort(400, ("Required field missing from "
-                           "request [field, tag, interval]"))
+        return abort(make_response(jsonify(
+            message=("Required field missing from "
+                     "request [field, tag, interval]")), 400))
     field = request.args.get("field")
     mins = int(request.args.get("interval")) * -1
     tag = request.args.get("tag")
     if mins >= 0:
-        return abort(400, "Interval must be larger than 0")
+        return abort(make_response(jsonify(
+            message="Interval must be larger than 0"), 400))
 
     # check if debug is enabled or not
     debug_enabled = False
