@@ -23,6 +23,7 @@ def ruuvitag_trend(request):
 
     if debug_enabled:
         print(request)
+        print(request.args)
 
     # read latest values for each tag from bigquery
     table_id = os.environ.get("TABLE_ID")
