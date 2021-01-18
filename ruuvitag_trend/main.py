@@ -52,6 +52,9 @@ def ruuvitag_trend(request):
     query_job = bq.query(latest_query, job_config=job_config)
 
     records = [row["data"][field] for row in query_job]
+    if len(records) <= 1:
+        return abort(make_response(jsonify(
+            message="Not enough records to deduce trend from"), 204))
     coeffs = numpy.polyfit([*range(1, len(records) + 1)], records, 1)
     # if the slope is a +ve value --> increasing trend
     # if the slope is a -ve value --> decreasing trend
