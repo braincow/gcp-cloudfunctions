@@ -20,3 +20,7 @@ updates:
   directory: "/ruuvitag_trend"
   schedule:
     interval: "daily"
+- package-ecosystem: "pip"
+  directory: "/ruuvitags"
+  schedule:
+    interval: "daily"
