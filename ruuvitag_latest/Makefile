@@ -24,3 +24,7 @@ call:
 call-single:
 	curl -s -H "Authorization: Bearer $(shell gcloud auth print-identity-token)" \
 		"$(shell gcloud functions describe ruuvitag_latest --region europe-west1 --format json |jq -r .httpsTrigger.url)?tag=bedroom" |jq
+
+call-borked:
+	curl -s -H "Authorization: Bearer $(shell gcloud auth print-identity-token)" \
+		"$(shell gcloud functions describe ruuvitag_latest --region europe-west1 --format json |jq -r .httpsTrigger.url)?tag=borked" |jq

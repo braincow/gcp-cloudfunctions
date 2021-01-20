@@ -17,8 +17,10 @@ def ruuvitag_latest(request):
         raise ValueError("TABLE_ID environment variable cannot be empty")
 
     tag = request.args.get("tag", "%")
-
-    bq = bigquery.Client()
+    if tag == "":
+        tag = "%"
+    else:
+        tag = "%{}%".format(tag)
 
     latest_query = """
 SELECT
@@ -45,8 +47,13 @@ FROM (
       ]
     )
 
+    bq = bigquery.Client()
     query_job = bq.query(latest_query, job_config=job_config)
     records = [dict(row) for row in query_job]
+
+    if len(records) == 0:
+        return abort(make_response(jsonify(
+            message="No records returned from database"), 404))
 
     if debug_enabled:
         print(records)

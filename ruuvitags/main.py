@@ -1,6 +1,6 @@
 def ruuvitags(request):
     from google.cloud import bigquery
-    from flask import jsonify
+    from flask import jsonify, abort, make_response
     import os
 
     # check if debug is enabled or not
@@ -22,6 +22,10 @@ def ruuvitags(request):
 
     query_job = bq.query(tags_query)
     records = [dict(row) for row in query_job]
+
+    if len(records) == 0:
+        return abort(make_response(jsonify(
+            message="No records returned from database"), 404))
 
     if debug_enabled:
         print(records)
