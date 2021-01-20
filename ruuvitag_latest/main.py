@@ -1,6 +1,6 @@
 def ruuvitag_latest(request):
     from google.cloud import bigquery
-    from flask import jsonify
+    from flask import jsonify, abort, make_response
     import os
 
     # check if debug is enabled or not
@@ -15,6 +15,8 @@ def ruuvitag_latest(request):
     table_id = os.environ.get("TABLE_ID")
     if not table_id or table_id == "":
         raise ValueError("TABLE_ID environment variable cannot be empty")
+
+    tag = request.args.get("tag", "%")
 
     bq = bigquery.Client()
 
@@ -34,10 +36,16 @@ FROM (
   GROUP BY
     address)
   RIGHT JOIN ruuvitag.known_tags tags
-  ON tags.address = agg.table.address;
+  ON tags.address = agg.table.address
+  WHERE tags.name LIKE @tagname;
     """.format(table_id)
+    job_config = bigquery.QueryJobConfig(
+      query_parameters=[
+        bigquery.ScalarQueryParameter("tagname", "STRING", tag)
+      ]
+    )
 
-    query_job = bq.query(latest_query)
+    query_job = bq.query(latest_query, job_config=job_config)
     records = [dict(row) for row in query_job]
 
     if debug_enabled:
