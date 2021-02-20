@@ -1,0 +1,98 @@
+swagger: "2.0"
+info:
+  title: ruuvitag query API
+  description: Simple API to query stored Ruuvitag information
+  version: 1.3.0
+  contact:
+    name: Antti Peltonen
+    url: https://bcow.me
+    email: bcow@iki.fi
+schemes:
+  - https
+produces:
+  - application/json
+securityDefinitions:
+  sopel-bot-sa:
+    authorizationUrl: "http://localhost"
+    flow: "implicit"
+    type: "oauth2"
+    x-google-issuer: "sopel-bot@bcow-me.iam.gserviceaccount.com"
+    x-google-jwks_uri: "https://www.googleapis.com/robot/v1/metadata/x509/sopel-bot@bcow-me.iam.gserviceaccount.com"
+  ruuvitags-sa:
+    authorizationUrl: "http://localhost"
+    flow: "implicit"
+    type: "oauth2"
+    x-google-issuer: "ruuvitags@bcow-me.iam.gserviceaccount.com"
+    x-google-jwks_uri: "https://www.googleapis.com/robot/v1/metadata/x509/ruuvitags@bcow-me.iam.gserviceaccount.com"
+security:
+  - sopel-bot-sa: []
+  - ruuvitags-sa: []
+paths:
+  /ruuvitags:
+    get:
+      summary: List available Ruuvitags
+      operationId: list
+      x-google-backend:
+        address: https://europe-west1-bcow-me.cloudfunctions.net/ruuvitags
+      responses:
+        "200":
+          description: A list of available Ruuvitags
+          schema:
+            type: array
+            items:
+              type: object
+  /ruuvitags/latest:
+    get:
+      summary: Get Ruuvitags latest recorded data
+      parameters:
+        - name: tag
+          in: query
+          required: false
+          description: Full or partial name of a Ruuvitag
+          type: string
+      operationId: latest
+      x-google-backend:
+        address: https://europe-west1-bcow-me.cloudfunctions.net/ruuvitag_latest
+      responses:
+        "200":
+          description: A list of Ruuvitags and their record data
+          schema:
+            type: array
+            items:
+              type: object
+  /ruuvitags/trend:
+    get:
+      summary: Get Ruuvitags latest recorded data
+      parameters:
+        - name: tag
+          in: query
+          required: true
+          description: Full name of a Ruuvitag
+          type: string
+        - name: interval
+          in: query
+          required: true
+          description: Time window in minutes for which the trend is calculated for.
+          type: number
+        - name: field
+          in: query
+          required: true
+          description: Name of the datapoint for which the trend is calculated for.
+          type: string
+          enum:
+            - temperature
+            - humidity
+            - atmospheric_pressure
+      operationId: trend
+      x-google-backend:
+        address: https://europe-west1-bcow-me.cloudfunctions.net/ruuvitag_trend
+      responses:
+        "200":
+          description: An object with list of data points and the calculated trend
+          schema:
+            type: object
+#
+# gcloud api-gateway api-configs create ruuvitag-api-config-130 --api=ruuvitag --openapi-spec=ruuvitag_openapi.yaml --project=bcow-me --backend-auth-service-account=ruuvitags@bcow-me.iam.gserviceaccount.com
+# gcloud api-gateway gateways create ruuvitag-api-gateway --api=ruuvitag --api-config=ruuvitag-api-config-130 --location=europe-west1 --project=bcow-me
+#
+# eof
