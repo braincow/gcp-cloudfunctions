@@ -1,1 +1,1 @@
-google-cloud-iot==2.0.2
+google-cloud-iot==2.1.0
