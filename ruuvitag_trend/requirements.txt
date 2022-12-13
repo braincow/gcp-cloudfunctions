@@ -1,2 +1,2 @@
-google-cloud-bigquery==2.30.1
+google-cloud-bigquery==3.4.1
 numpy==1.21.4
